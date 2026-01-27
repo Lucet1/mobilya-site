@@ -3,7 +3,6 @@
 // ============================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-// YENİ: Auth kütüphanesini ekledik
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -18,7 +17,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app); // YENİ: Auth sistemini başlattık
+const auth = getAuth(app); 
 
 // ============================================================
 // 2. RESMİ METNE ÇEVİR (Base64)
@@ -48,25 +47,23 @@ function compressAndConvertToBase64(file) {
 }
 
 // ============================================================
-// 3. ADMIN PANELİ İŞLEMLERİ (GÜVENLİ VERSİYON)
+// 3. ADMIN PANELİ İŞLEMLERİ
 // ============================================================
 if (window.location.pathname.includes("admin.html")) {
 
-    // OTURUM DURUMUNU DİNLE (Sayfa yenilense bile hatırlar)
+    // OTURUM DURUMUNU DİNLE
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            // Kullanıcı giriş yapmışsa paneli göster
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('dashboard-screen').style.display = 'block';
             loadAdminProducts();
         } else {
-            // Giriş yapmamışsa login ekranını göster
             document.getElementById('login-screen').style.display = 'block';
             document.getElementById('dashboard-screen').style.display = 'none';
         }
     });
 
-    // A) GİRİŞ İŞLEMİ (ARTIK GOOGLE KONTROL EDİYOR)
+    // GİRİŞ İŞLEMİ
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', function(e){
@@ -74,20 +71,18 @@ if (window.location.pathname.includes("admin.html")) {
             const email = document.getElementById('adminEmail').value;
             const pass = document.getElementById('adminPassword').value;
             
-            // Firebase'e soruyoruz: Bu bilgiler doğru mu?
             signInWithEmailAndPassword(auth, email, pass)
                 .then((userCredential) => {
-                    // Başarılı! onAuthStateChanged otomatik tetiklenir
                     console.log("Giriş Başarılı:", userCredential.user.email);
                 })
                 .catch((error) => {
                     console.error("Giriş Hatası:", error.code);
-                    alert("Hatalı E-posta veya Şifre! (Hata: " + error.code + ")");
+                    alert("Hatalı E-posta veya Şifre!");
                 });
         });
     }
 
-    // Çıkış Butonu
+    // ÇIKIŞ BUTONU
     const logoutBtn = document.getElementById('logoutBtn');
     if(logoutBtn) {
         logoutBtn.addEventListener('click', function(){ 
@@ -98,7 +93,7 @@ if (window.location.pathname.includes("admin.html")) {
         });
     }
 
-    // B) Ürün Yükleme
+    // ÜRÜN YÜKLEME
     const addForm = document.getElementById('addProductForm');
     if (addForm) {
         addForm.addEventListener('submit', async function(e) {
@@ -126,7 +121,7 @@ if (window.location.pathname.includes("admin.html")) {
         });
     }
 
-    // C) Admin Galeri Listeleme
+    // ADMIN GALERİ LİSTELEME
     async function loadAdminProducts() {
         const grid = document.getElementById('adminProductGrid');
         if (!grid) return;
@@ -162,7 +157,7 @@ if (window.location.pathname.includes("admin.html")) {
         }
     }
 
-    // D) Ürün Silme
+    // ÜRÜN SİLME
     window.deleteProduct = async function(docId) {
         if(!confirm("⚠️ SİLMEK İSTİYOR MUSUNUZ?")) return;
 
@@ -224,7 +219,9 @@ if (window.location.pathname.includes("urunler.html")) {
     document.addEventListener('DOMContentLoaded', loadPublicProducts);
 }
 
-// LIGHTBOX (Aynı Kalıyor)
+// ============================================================
+// 5. LIGHTBOX (BÜYÜTEÇ)
+// ============================================================
 function setupLightbox() {
     if(!document.getElementById('imageModal')) {
         const modalHTML = `
@@ -256,40 +253,28 @@ function setupLightbox() {
 document.addEventListener('DOMContentLoaded', setupLightbox);
 
 // ============================================================
-// 6. SCROLL ANIMASYONLARI (ScrollReveal)
+// 6. SCROLL ANIMASYONLARI (ScrollReveal) - DÜZELTİLDİ
 // ============================================================
-// Sadece tarayıcıda ScrollReveal yüklendiyse çalışsın
 if (typeof ScrollReveal !== 'undefined') {
     const sr = ScrollReveal({
-        origin: 'bottom',   // Alttan gelsin
-        distance: '60px',   // 60px mesafeden
-        duration: 1000,     // 1 saniye sürsün
-        delay: 200,         // Biraz beklesin
-        reset: false        // Yukarı çıkıp inince tekrar etmesin (daha profesyonel)
+        origin: 'bottom',
+        distance: '60px',
+        duration: 1000,
+        delay: 200,
+        reset: false
     });
 
     // Hangi elemanlar nasıl gelsin?
-    
-    // 1. Üst Başlık ve Banner (Üstten insin)
     sr.reveal('.hero-content, .page-banner h2', { origin: 'top', distance: '80px' });
-
-    // 2. Başlıklar (Soldan gelsin)
     sr.reveal('.section-title', { origin: 'left', interval: 200 });
-
-    // 3. Ürün Kartları (Alttan sırayla gelsin)
-    // interval: Kartlar tek tek pıt-pıt-pıt diye gelir
     sr.reveal('.product-card', { interval: 150 }); 
-
-    // 4. Footer (Alttan gelsin)
     sr.reveal('footer', { distance: '20px', delay: 100 });
+    
+    // YENİ EKLENEN CTA BÖLÜMÜ (Artık süslü parantezin içinde!)
+    sr.reveal('.cta-section', { scale: 0.85, duration: 1200 });
 }
 
-// ... diğer animasyon kodlarının altına ...
-
-    // 5. CTA Bölümü (Zoom yaparak gelsin)
-    sr.reveal('.cta-section', { scale: 0.85, duration: 1200 });
-
-    // ============================================================
+// ============================================================
 // 7. HAMBURGER MENÜ (GARANTİLİ VERSİYON)
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -297,14 +282,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const hamburger = document.querySelector(".hamburger");
     const navMenu = document.querySelector(".nav-links");
 
-    // Konsola bilgi verelim (Çalışıp çalışmadığını anlamak için)
     if (hamburger) {
-        console.log("✅ Hamburger menü butonu bulundu.");
+        // Konsola bilgi verelim
+        console.log("✅ Hamburger menü hazır.");
         
         hamburger.addEventListener("click", () => {
-            console.log("🍔 Hamburgere tıklandı!");
-            hamburger.classList.toggle("active"); // Çizgiyi X yap
-            navMenu.classList.toggle("active");   // Menüyü aç
+            hamburger.classList.toggle("active"); 
+            navMenu.classList.toggle("active");
         });
 
         // Linklere basınca kapansın
@@ -315,7 +299,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-    } else {
-        console.error("❌ HATA: Hamburger butonu bulunamadı! HTML'de class='hamburger' var mı?");
     }
 });
