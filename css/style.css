@@ -1387,3 +1387,74 @@ footer {
     color: #c9a24d;
     transform: scale(1.05) translateY(-3px);
 }
+
+/* ================= HAMBURGER MENÜ (MOBİL İÇİN) ================= */
+
+/* Başlangıçta hamburger ikonunu gizle (Masaüstü için) */
+.hamburger {
+    display: none;
+    cursor: pointer;
+}
+
+.bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    transition: all 0.3s ease-in-out;
+    background-color: white; /* Çizgi rengi */
+}
+
+/* --- MOBİL GÖRÜNÜM AYARLARI --- */
+@media (max-width: 768px) {
+    /* Header'ı yan yana hizala (Logo solda, Hamburger sağda) */
+    .main-header .container {
+        flex-direction: row; 
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .hamburger {
+        display: block; /* Mobilde hamburgeri göster */
+        z-index: 1001; /* En üstte dursun */
+    }
+
+    /* Menü normalde gizli olsun ve ekranın sağına saklansın */
+    .nav-links {
+        position: fixed;
+        right: -100%; /* Ekran dışına it */
+        top: 70px; /* Header yüksekliği kadar aşağıdan başlasın */
+        gap: 0;
+        flex-direction: column;
+        background-color: #1a1a1a; /* Siyah arka plan */
+        width: 100%;
+        text-align: center;
+        transition: 0.3s; /* Kayma efekti hızı */
+        box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+        padding-bottom: 20px;
+    }
+
+    /* Menü açıldığında burası devreye girer */
+    .nav-links.active {
+        right: 0; /* Geri gel */
+    }
+
+    .nav-links li {
+        margin: 20px 0;
+    }
+    
+    .nav-links li a {
+        font-size: 18px; /* Mobilde yazılar daha büyük olsun */
+    }
+
+    /* Hamburger Çarpı (X) Dönüşümü */
+    .hamburger.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+    .hamburger.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+    .hamburger.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+}
