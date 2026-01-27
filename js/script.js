@@ -290,20 +290,32 @@ if (typeof ScrollReveal !== 'undefined') {
     sr.reveal('.cta-section', { scale: 0.85, duration: 1200 });
 
     // ============================================================
-// 7. HAMBURGER MENÜ ÇALIŞTIRMA
+// 7. HAMBURGER MENÜ (GARANTİLİ VERSİYON)
 // ============================================================
-const hamburger = document.querySelector(".hamburger");
-const navMenu = document.querySelector(".nav-links");
+document.addEventListener('DOMContentLoaded', () => {
+    
+    const hamburger = document.querySelector(".hamburger");
+    const navMenu = document.querySelector(".nav-links");
 
-if(hamburger && navMenu) {
-    hamburger.addEventListener("click", () => {
-        hamburger.classList.toggle("active"); // Çizgiyi çarpı yap
-        navMenu.classList.toggle("active");   // Menüyü aç/kapa
-    });
+    // Konsola bilgi verelim (Çalışıp çalışmadığını anlamak için)
+    if (hamburger) {
+        console.log("✅ Hamburger menü butonu bulundu.");
+        
+        hamburger.addEventListener("click", () => {
+            console.log("🍔 Hamburgere tıklandı!");
+            hamburger.classList.toggle("active"); // Çizgiyi X yap
+            navMenu.classList.toggle("active");   // Menüyü aç
+        });
 
-    // Menüden bir linke tıklayınca menüyü otomatik kapat
-    document.querySelectorAll(".nav-links li a").forEach(n => n.addEventListener("click", () => {
-        hamburger.classList.remove("active");
-        navMenu.classList.remove("active");
-    }));
-}
+        // Linklere basınca kapansın
+        document.querySelectorAll(".nav-links li a").forEach(link => {
+            link.addEventListener("click", () => {
+                hamburger.classList.remove("active");
+                navMenu.classList.remove("active");
+            });
+        });
+
+    } else {
+        console.error("❌ HATA: Hamburger butonu bulunamadı! HTML'de class='hamburger' var mı?");
+    }
+});
