@@ -1,8 +1,10 @@
 // ============================================================
-// 1. FIREBASE AYARLARI
+// 1. FIREBASE VE AUTH KÜTÜPHANELERİ
 // ============================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// YENİ: Auth kütüphanesini ekledik
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAoUsSHjUL6n7hoja7jOXCSk51i4_Uvcq4",
@@ -16,6 +18,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app); // YENİ: Auth sistemini başlattık
 
 // ============================================================
 // 2. RESMİ METNE ÇEVİR (Base64)
@@ -45,11 +48,25 @@ function compressAndConvertToBase64(file) {
 }
 
 // ============================================================
-// 3. ADMIN PANELİ İŞLEMLERİ
+// 3. ADMIN PANELİ İŞLEMLERİ (GÜVENLİ VERSİYON)
 // ============================================================
 if (window.location.pathname.includes("admin.html")) {
 
-    // A) GİRİŞ İŞLEMİ
+    // OTURUM DURUMUNU DİNLE (Sayfa yenilense bile hatırlar)
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Kullanıcı giriş yapmışsa paneli göster
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard-screen').style.display = 'block';
+            loadAdminProducts();
+        } else {
+            // Giriş yapmamışsa login ekranını göster
+            document.getElementById('login-screen').style.display = 'block';
+            document.getElementById('dashboard-screen').style.display = 'none';
+        }
+    });
+
+    // A) GİRİŞ İŞLEMİ (ARTIK GOOGLE KONTROL EDİYOR)
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', function(e){
@@ -57,13 +74,16 @@ if (window.location.pathname.includes("admin.html")) {
             const email = document.getElementById('adminEmail').value;
             const pass = document.getElementById('adminPassword').value;
             
-            if(email === "admin@mobilya.com" && pass === "uu26478cT2YDsD") {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('dashboard-screen').style.display = 'block';
-                loadAdminProducts();
-            } else { 
-                alert("Hatalı E-posta veya Şifre!"); 
-            }
+            // Firebase'e soruyoruz: Bu bilgiler doğru mu?
+            signInWithEmailAndPassword(auth, email, pass)
+                .then((userCredential) => {
+                    // Başarılı! onAuthStateChanged otomatik tetiklenir
+                    console.log("Giriş Başarılı:", userCredential.user.email);
+                })
+                .catch((error) => {
+                    console.error("Giriş Hatası:", error.code);
+                    alert("Hatalı E-posta veya Şifre! (Hata: " + error.code + ")");
+                });
         });
     }
 
@@ -71,7 +91,10 @@ if (window.location.pathname.includes("admin.html")) {
     const logoutBtn = document.getElementById('logoutBtn');
     if(logoutBtn) {
         logoutBtn.addEventListener('click', function(){ 
-            location.reload(); 
+            signOut(auth).then(() => {
+                alert("Çıkış yapıldı.");
+                location.reload();
+            });
         });
     }
 
@@ -135,51 +158,43 @@ if (window.location.pathname.includes("admin.html")) {
                 grid.innerHTML += cardHTML;
             });
         } catch (error) {
-            console.error("Admin yükleme hatası:", error);
-            grid.innerHTML = "<p style='color:red;'>Veriler yüklenirken hata oluştu.</p>";
+            console.error("Yükleme hatası:", error);
         }
     }
 
     // D) Ürün Silme
     window.deleteProduct = async function(docId) {
-        if(!confirm("⚠️ BU FOTOĞRAFI SİLMEK İSTİYOR MUSUNUZ?\n\nBu işlem geri alınamaz.")) return;
+        if(!confirm("⚠️ SİLMEK İSTİYOR MUSUNUZ?")) return;
 
         try {
             await deleteDoc(doc(db, "products", docId));
             loadAdminProducts(); 
         } catch (error) {
             console.error("Silme hatası:", error);
-            alert("Silinirken hata oluştu.");
+            alert("Yetkiniz yok veya bir hata oluştu.");
         }
     };
 }
 
 // ============================================================
-// 4. MÜŞTERİ SAYFASI (urunler.html) - SKELETON EKLENDİ
+// 4. MÜŞTERİ SAYFASI (SKELETON & LIGHTBOX DAHİL)
 // ============================================================
 if (window.location.pathname.includes("urunler.html")) {
     
     async function loadPublicProducts() {
         const grid = document.querySelector('.products-grid');
         
-        // 1. ADIM: Veri gelene kadar SKELETON (Sahte Kutular) göster
-        // 8 tane boş kutu oluşturuyoruz
+        // SKELETON LOADING
         let skeletonHTML = "";
         for(let i=0; i<8; i++) {
-            skeletonHTML += `
-                <div class="skeleton-card">
-                    <div class="skeleton-image"></div>
-                </div>
-            `;
+            skeletonHTML += `<div class="skeleton-card"><div class="skeleton-image"></div></div>`;
         }
         grid.innerHTML = skeletonHTML;
 
         try {
-            // 2. ADIM: Veritabanından verileri çek
             const q = query(collection(db, "products"), orderBy("date", "desc"));
             const querySnapshot = await getDocs(q);
 
-            // 3. ADIM: Veri geldi! Şimdi ekranı temizle
             grid.innerHTML = "";
 
             if (querySnapshot.empty) {
@@ -187,7 +202,6 @@ if (window.location.pathname.includes("urunler.html")) {
                 return;
             }
 
-            // 4. ADIM: Gerçek ürünleri yerleştir
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 const html = `
@@ -201,58 +215,37 @@ if (window.location.pathname.includes("urunler.html")) {
                 grid.insertAdjacentHTML('beforeend', html);
             });
 
-            // Ürünler yüklendikten sonra Lightbox'ı tekrar kur
             setupLightbox();
             
         } catch (error) {
-            console.error("Ürün yükleme hatası:", error);
-            // Hata olursa kullanıcıya bildir
-            grid.innerHTML = "<p style='width:100%; text-align:center; color:red; grid-column:1/-1;'>Ürünler yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.</p>";
+            console.error("Yükleme hatası:", error);
         }
     }
     document.addEventListener('DOMContentLoaded', loadPublicProducts);
 }
 
-// ============================================================
-// 5. LIGHTBOX (Büyüteç) - HER YERDE ÇALIŞIR
-// ============================================================
+// LIGHTBOX (Aynı Kalıyor)
 function setupLightbox() {
-    // Modal zaten varsa tekrar oluşturma
     if(!document.getElementById('imageModal')) {
         const modalHTML = `
-            <div id="imageModal" class="modal">
-                <span class="close">×</span>
-                <img class="modal-content" id="img01">
-            </div>
+            <div id="imageModal" class="modal"><span class="close">×</span><img class="modal-content" id="img01"></div>
         `;
         document.body.insertAdjacentHTML('beforeend', modalHTML);
         const modal = document.getElementById("imageModal");
         const closeBtn = document.querySelector(".close");
-        
         closeBtn.onclick = function() { modal.style.display = "none"; }
         modal.onclick = function(e) { if (e.target === modal) modal.style.display = "none"; }
-        document.addEventListener('keydown', function(event) {
-            if (event.key === "Escape") modal.style.display = "none";
-        });
+        document.addEventListener('keydown', function(event) { if (event.key === "Escape") modal.style.display = "none"; });
     }
-    
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("img01");
-    
-    // Sayfadaki tüm resimlere tıklama olayını dinle
     document.body.addEventListener('click', function(e) {
-        // Tıklanan eleman veya onun bir üstü .product-img-wrapper sınıfına sahip mi?
         const wrapper = e.target.closest('.product-img-wrapper');
-        
         if (wrapper) {
-            // Eğer butona bastıysa modalı açma
             if(e.target.classList.contains('view-btn')) return;
-            
             e.preventDefault();
             const img = wrapper.querySelector('img');
-            // Eğer resim henüz yüklenmediyse (skeleton ise) açma
             if (!img || !img.src) return;
-
             modal.style.display = "flex";
             modal.style.alignItems = "center";
             modal.style.justifyContent = "center";
@@ -260,6 +253,4 @@ function setupLightbox() {
         }
     });
 }
-
-// Sayfa yüklendiğinde Lightbox'ı hazırla
 document.addEventListener('DOMContentLoaded', setupLightbox);
