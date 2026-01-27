@@ -908,3 +908,348 @@ footer {
     max-height: 70px;       /* Yüksekliği idealleştir */
     width: auto;            /* Genişlik orantılı kalsın */
 }
+
+/* ================= SKELETON LOADING (YÜKLEME EFEKTİ) ================= */
+.skeleton-card {
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 400px; /* Ürün kartı yüksekliğiyle aynı */
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 100%;
+    background: #eee;
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    background-size: 200% 100%;
+    animation: 1.5s shine linear infinite;
+}
+
+@keyframes shine {
+    to {
+        background-position-x: -200%;
+    }
+}
+
+/* ================= GENEL AYARLAR ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    color: #333;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* ================= HEADER & NAV ================= */
+.main-header {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo img {
+    max-height: 85px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    transition: transform 0.3s;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.nav-links li a {
+    color: #ddd;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.nav-links li a:hover, .nav-links li a.active {
+    color: #c9a24d;
+}
+
+.admin-btn {
+    background-color: #c9a24d;
+    color: #fff !important;
+    padding: 8px 15px;
+    border-radius: 4px;
+}
+
+/* ================= HERO & BANNER ================= */
+.hero-home, .page-banner {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('../images/urun1.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-content h2, .page-banner h2 {
+    font-size: 42px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.cta-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #c9a24d;
+    color: white;
+    text-decoration: none;
+    margin-top: 20px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+/* ================= ÜRÜNLER (GRID) ================= */
+.products-section, .featured-products {
+    padding: 60px 0;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.underline {
+    width: 60px;
+    height: 3px;
+    background: #c9a24d;
+    margin: 10px auto;
+}
+
+.products-grid, .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.product-img-wrapper {
+    position: relative;
+    overflow: hidden;
+    height: 400px;
+    cursor: zoom-in;
+}
+
+.featured-products .product-img-wrapper {
+    height: 350px;
+}
+
+.product-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.6s ease;
+}
+
+.product-card:hover img { transform: scale(1.05); }
+
+.overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(201, 162, 77, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.product-card:hover .overlay { opacity: 1; }
+
+.view-btn {
+    color: white;
+    border: 2px solid white;
+    padding: 10px 25px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.product-info, .product-desc { 
+    display: none !important; 
+}
+
+/* ================= FOOTER ================= */
+footer {
+    background-color: #1a1a1a;
+    color: #999;
+    padding: 60px 0 20px;
+    text-align: center;
+}
+
+.footer-grid {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 30px;
+    margin-bottom: 20px;
+}
+
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.footer-logo-img {
+    max-height: 60px;
+    margin-bottom: 15px;
+    opacity: 0.9;
+    display: block;
+    width: auto;
+}
+
+.social img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.social img:hover { 
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(201, 162, 77, 0.4);
+}
+
+.copyright { text-align: center; font-size: 13px; }
+
+/* ================= LIGHTBOX (MODAL) ================= */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    padding-top: 50px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 900px;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    animation: zoomIn 0.3s;
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    z-index: 2001;
+}
+
+.close:hover { color: #c9a24d; }
+
+@keyframes zoomIn {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* ================= SKELETON LOADING (YENİ EKLENEN KISIM) ================= */
+.skeleton-card {
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 400px; /* Ürün kartı yüksekliğiyle aynı */
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.skeleton-image {
+    width: 100%;
+    height: 100%;
+    background: #eee;
+    /* Parlama efekti */
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    background-size: 200% 100%;
+    animation: 1.5s shine linear infinite;
+}
+
+@keyframes shine {
+    to {
+        background-position-x: -200%;
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .main-header .container { flex-direction: column; gap: 15px; }
+    .nav-links { gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .hero-content h2 { font-size: 30px; }
+    .product-img-wrapper, .skeleton-card { height: 300px !important; }
+    .footer-grid { flex-direction: column; gap: 20px; }
+}
