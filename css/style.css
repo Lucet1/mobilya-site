@@ -1458,3 +1458,33 @@ footer {
         transform: translateY(-8px) rotate(-45deg);
     }
 }
+
+/* ================= SAYFAYA ÖZEL BANNER RESİMLERİ (GÜNCEL) ================= */
+
+/* 1. Ürünler Sayfası (urun2.jpg) */
+.banner-urunler {
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/urun2.jpg') !important;
+    background-position: center;
+    background-size: cover;
+}
+
+/* 2. Hakkımızda Sayfası (urun10.jpg) */
+.banner-hakkimizda {
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/urun10.jpg') !important;
+    background-position: center;
+    background-size: cover;
+}
+
+/* 3. Vizyon & Misyon Sayfası (urun14.jpg) */
+.banner-vizyon {
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/urun14.jpg') !important;
+    background-position: center;
+    background-size: cover;
+}
+
+/* 4. İletişim Sayfası (urun17.jpg) */
+.banner-iletisim {
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/urun17.jpg') !important;
+    background-position: center;
+    background-size: cover;
+}
