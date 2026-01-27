@@ -254,3 +254,37 @@ function setupLightbox() {
     });
 }
 document.addEventListener('DOMContentLoaded', setupLightbox);
+
+// ============================================================
+// 6. SCROLL ANIMASYONLARI (ScrollReveal)
+// ============================================================
+// Sadece tarayıcıda ScrollReveal yüklendiyse çalışsın
+if (typeof ScrollReveal !== 'undefined') {
+    const sr = ScrollReveal({
+        origin: 'bottom',   // Alttan gelsin
+        distance: '60px',   // 60px mesafeden
+        duration: 1000,     // 1 saniye sürsün
+        delay: 200,         // Biraz beklesin
+        reset: false        // Yukarı çıkıp inince tekrar etmesin (daha profesyonel)
+    });
+
+    // Hangi elemanlar nasıl gelsin?
+    
+    // 1. Üst Başlık ve Banner (Üstten insin)
+    sr.reveal('.hero-content, .page-banner h2', { origin: 'top', distance: '80px' });
+
+    // 2. Başlıklar (Soldan gelsin)
+    sr.reveal('.section-title', { origin: 'left', interval: 200 });
+
+    // 3. Ürün Kartları (Alttan sırayla gelsin)
+    // interval: Kartlar tek tek pıt-pıt-pıt diye gelir
+    sr.reveal('.product-card', { interval: 150 }); 
+
+    // 4. Footer (Alttan gelsin)
+    sr.reveal('footer', { distance: '20px', delay: 100 });
+}
+
+// ... diğer animasyon kodlarının altına ...
+
+    // 5. CTA Bölümü (Zoom yaparak gelsin)
+    sr.reveal('.cta-section', { scale: 0.85, duration: 1200 });

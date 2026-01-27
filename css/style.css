@@ -1253,3 +1253,137 @@ footer {
     .product-img-wrapper, .skeleton-card { height: 300px !important; }
     .footer-grid { flex-direction: column; gap: 20px; }
 }
+
+/* ================= YENİ GÖRSEL EFEKTLER (MAKYAJ) ================= */
+
+/* 1. WhatsApp Butonu */
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    animation: pulse 2s infinite;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+    background-color: #1ebe57;
+}
+
+.whatsapp-float img {
+    width: 35px;
+    height: 35px;
+}
+
+/* WhatsApp Nabız Efekti */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+/* 2. Daha Havalı Ürün Kartları */
+.product-card {
+    border-radius: 8px; /* Köşeleri yuvarlat */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08); /* Hafif gölge */
+    border: 1px solid rgba(0,0,0,0.05);
+    background: #fff;
+    transform: translateY(0);
+    transition: all 0.4s ease; /* Yumuşak geçiş */
+}
+
+.product-card:hover {
+    transform: translateY(-10px); /* Mouse gelince yukarı kalksın */
+    box-shadow: 0 15px 30px rgba(201, 162, 77, 0.2); /* Altın rengi gölge */
+}
+
+/* 3. Hero (Giriş) Yazısı Efekti */
+.hero-content {
+    background: rgba(0, 0, 0, 0.5); /* Yazının arkasına hafif siyahlık */
+    padding: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(5px); /* Buzlu cam efekti */
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.hero-content h2 {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.cta-btn {
+    border-radius: 50px; /* Yuvarlak buton */
+    box-shadow: 0 4px 15px rgba(201, 162, 77, 0.4);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.cta-btn:hover {
+    background-color: #fff;
+    color: #c9a24d;
+    transform: scale(1.05);
+}
+
+/* ================= CTA (EYLEME ÇAĞRI) BÖLÜMÜ ================= */
+.cta-section {
+    background-color: #1a1a1a; /* Koyu gri/siyah arka plan */
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+    margin-top: 50px;
+    /* Hafif bir desen ekleyelim ki dümdüz siyah olmasın */
+    background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('../images/urun1.jpg');
+    background-size: cover;
+    background-attachment: fixed; /* Resmi arkada sabitler (Parallax etkisi) */
+}
+
+.cta-section h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #c9a24d; /* Altın sarısı */
+}
+
+.cta-section p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #ddd;
+}
+
+.cta-btn-large {
+    display: inline-block;
+    background-color: #c9a24d;
+    color: #fff;
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 50px;
+    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(201, 162, 77, 0.4);
+}
+
+.cta-btn-large:hover {
+    background-color: #fff;
+    color: #c9a24d;
+    transform: scale(1.05) translateY(-3px);
+}
