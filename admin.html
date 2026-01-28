@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yönetici Paneli | Emre Koltuk Tasarım</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     
+    <link rel="icon" type="image/png" href="images/logo.jpg">
+    <link rel="apple-touch-icon" href="images/logo.jpg">
+    <meta name="theme-color" content="#1a1a1a">
+
     <style>
         /* === MODERN ADMIN TASARIMI === */
         body { background-color: #f4f4f4; }
@@ -106,6 +111,11 @@
             background: #333; color: white; border: none;
             padding: 10px 20px; border-radius: 5px; cursor: pointer;
         }
+        
+        /* Mobilde Logout butonu ve başlık hizası için */
+        @media (max-width: 768px) {
+            .dashboard-header { flex-direction: column; gap: 15px; text-align: center; }
+        }
     </style>
 </head>
 <body>
@@ -113,14 +123,25 @@
     <header class="main-header">
         <div class="container">
             <div class="logo">
-                <a href="index.html"><img src="images/logo.jpg" alt="Emre Koltuk Tasarım"></a>
+                <a href="index.html">
+                    <img src="images/logo.jpg" alt="Emre Koltuk Tasarım">
+                </a>
             </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Ana Sayfa</a></li>
-                    <li><a href="admin.html" class="active">Yönetim Paneli</a></li>
-                </ul>
-            </nav>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Ana Sayfa</a></li>
+                <li><a href="urunler.html">Ürünler</a></li>
+                <li><a href="hakkimizda.html">Hakkımızda</a></li>
+                <li><a href="vizyon-misyon.html">Vizyon & Misyon</a></li>
+                <li><a href="iletisim.html">İletişim</a></li>
+                <li><a href="admin.html" class="active">Yönetici</a></li>
+            </ul>
+
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
     </header>
 
@@ -166,6 +187,21 @@
             <div class="copyright"><p>&copy; 2026 Emre Koltuk Tasarım Yönetim Paneli</p></div>
         </div>
     </footer>
+
+    <div class="mobile-bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-text">Siteye Dön</span>
+        </a>
+        <a href="admin.html" class="nav-item main-action" style="background-color: #333; border-color: #333;">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-text">Panel</span>
+        </a>
+        <a href="#" id="mobileLogoutBtn" class="nav-item" onclick="document.getElementById('logoutBtn').click(); return false;">
+            <span class="nav-icon">🚪</span>
+            <span class="nav-text">Çıkış</span>
+        </a>
+    </div>
 
     <script type="module" src="js/script.js"></script>
 </body>

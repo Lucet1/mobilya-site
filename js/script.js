@@ -197,19 +197,30 @@ if (window.location.pathname.includes("urunler.html")) {
                 return;
             }
 
+            // ... önceki kodlar ...
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
+                
+                // WhatsApp Hazır Mesaj Linki
+                // Not: Ürün isimlerini veritabanında tutmadığımız için genel bir mesaj attırıyoruz.
+                // Müşteri bu linke tıklayınca WhatsApp açılır ve mesaj kutusunda yazı hazır bekler.
+                const whatsappLink = `https://wa.me/905427819966?text=Merhaba,%20web%20sitenizdeki%20bu%20ürün%20için%20fiyat%20bilgisi%20alabilir%20miyim?`;
+
                 const html = `
                     <div class="product-card">
                         <div class="product-img-wrapper">
                             <img src="${data.imageUrl}" loading="lazy">
-                            <div class="overlay"><a href="iletisim.html" class="view-btn">Teklif Al</a></div>
+                            <div class="overlay">
+                                <a href="${whatsappLink}" target="_blank" class="view-btn">
+                                    <span style="font-size:18px; vertical-align:middle;">📞</span> Fiyat Sor
+                                </a>
+                            </div>
                         </div>
                     </div>
                 `;
                 grid.insertAdjacentHTML('beforeend', html);
             });
-
+            // ... sonraki kodlar ...
             setupLightbox();
             
         } catch (error) {
