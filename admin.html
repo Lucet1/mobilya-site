@@ -167,6 +167,12 @@
                 <h3>📸 Yeni Fotoğraf Yükle</h3>
                 <p style="color:#666; font-size:0.9em; margin-bottom:15px;">Siteye eklemek istediğiniz fotoğrafı seçin.</p>
                 <form id="addProductForm">
+                    <select id="productCategory" required style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 8px; background: white; font-family: 'Montserrat', sans-serif;">
+                        <option value="" disabled selected>Ürün Durumu Seçin...</option>
+                        <option value="new">✨ Sıfır Ürün (Yeni Üretim)</option>
+                        <option value="refurbished">♻️ Yenilenmiş Ürün</option>
+                    </select>
+
                     <input type="file" id="productImage" accept="image/*" required style="margin-bottom:15px;">
                     <br>
                     <button type="submit" class="submit-btn">Siteye Yükle</button>

@@ -93,24 +93,40 @@ if (window.location.pathname.includes("admin.html")) {
         });
     }
 
-    // ÜRÜN YÜKLEME
+    // ÜRÜN YÜKLEME (GÜNCELLENDİ: Kategori Eklendi)
     const addForm = document.getElementById('addProductForm');
     if (addForm) {
         addForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const fileInput = document.getElementById('productImage');
+            const categoryInput = document.getElementById('productCategory'); // YENİ: Kategori Seçimi
+            
             const file = fileInput.files[0];
+            const category = categoryInput.value; // Seçilen değer (new veya refurbished)
             const statusMsg = document.getElementById('uploadStatus');
 
-            if (!file) return;
+            if (!file) {
+                alert("Lütfen bir resim seçin!");
+                return;
+            }
+            // Kategori seçilmediyse uyar
+            if (!category) {
+                alert("Lütfen ürün durumu seçin (Sıfır veya Yenilenmiş)!");
+                return;
+            }
+
             statusMsg.textContent = "Yükleniyor... Lütfen bekleyin.";
 
             try {
                 const base64Image = await compressAndConvertToBase64(file);
+                
+                // Veritabanına kaydet (Kategoriyle beraber)
                 await addDoc(collection(db, "products"), {
                     imageUrl: base64Image,
+                    category: category, // YENİ: Veritabanına yazılıyor
                     date: Date.now()
                 });
+
                 statusMsg.textContent = "✅ Fotoğraf Eklendi!";
                 addForm.reset();
                 loadAdminProducts(); 
@@ -141,8 +157,12 @@ if (window.location.pathname.includes("admin.html")) {
 
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
+                // Admin panelinde de hangi kategori olduğunu küçük bir ikonla gösterelim
+                const badgeIcon = data.category === 'refurbished' ? '♻️' : '✨';
+
                 const cardHTML = `
                     <div class="admin-card" onclick="window.deleteProduct('${doc.id}')">
+                        <div style="position:absolute; top:5px; left:5px; background:white; padding:2px 5px; border-radius:3px; font-size:12px; z-index:5;">${badgeIcon}</div>
                         <img src="${data.imageUrl}" alt="Ürün">
                         <div class="delete-overlay">
                             <span class="delete-icon">🗑️</span>
@@ -172,7 +192,7 @@ if (window.location.pathname.includes("admin.html")) {
 }
 
 // ============================================================
-// 4. MÜŞTERİ SAYFASI (SKELETON & LIGHTBOX DAHİL)
+// 4. MÜŞTERİ SAYFASI (FİLTRELEME & ROZETLER DAHİL)
 // ============================================================
 if (window.location.pathname.includes("urunler.html")) {
     
@@ -197,19 +217,28 @@ if (window.location.pathname.includes("urunler.html")) {
                 return;
             }
 
-            // ... önceki kodlar ...
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
                 
+                // YENİ: Kategori Kontrolü ve Rozet (Badge) Oluşturma
+                // Eğer eski yüklenen ürünlerde kategori yoksa varsayılan olarak 'new' (sıfır) kabul et
+                const productCat = data.category || 'new'; 
+                
+                let badgeHTML = '';
+                if (productCat === 'refurbished') {
+                    badgeHTML = `<span style="position:absolute; top:10px; left:10px; background:#27ae60; color:white; padding:5px 10px; border-radius:4px; font-size:12px; font-weight:bold; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">♻️ Yenilenmiş</span>`;
+                } else {
+                    badgeHTML = `<span style="position:absolute; top:10px; left:10px; background:#c9a24d; color:white; padding:5px 10px; border-radius:4px; font-size:12px; font-weight:bold; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">✨ Sıfır</span>`;
+                }
+
                 // WhatsApp Hazır Mesaj Linki
-                // Not: Ürün isimlerini veritabanında tutmadığımız için genel bir mesaj attırıyoruz.
-                // Müşteri bu linke tıklayınca WhatsApp açılır ve mesaj kutusunda yazı hazır bekler.
                 const whatsappLink = `https://wa.me/905427819966?text=Merhaba,%20web%20sitenizdeki%20bu%20ürün%20için%20fiyat%20bilgisi%20alabilir%20miyim?`;
 
+                // YENİ: data-category özelliği eklendi (Filtreleme için)
                 const html = `
-                    <div class="product-card">
+                    <div class="product-card" data-category="${productCat}">
                         <div class="product-img-wrapper">
-                            <img src="${data.imageUrl}" loading="lazy">
+                            ${badgeHTML} <img src="${data.imageUrl}" loading="lazy">
                             <div class="overlay">
                                 <a href="${whatsappLink}" target="_blank" class="view-btn">
                                     <span style="font-size:18px; vertical-align:middle;">📞</span> Fiyat Sor
@@ -220,7 +249,7 @@ if (window.location.pathname.includes("urunler.html")) {
                 `;
                 grid.insertAdjacentHTML('beforeend', html);
             });
-            // ... sonraki kodlar ...
+            
             setupLightbox();
             
         } catch (error) {
@@ -231,7 +260,33 @@ if (window.location.pathname.includes("urunler.html")) {
 }
 
 // ============================================================
-// 5. LIGHTBOX (BÜYÜTEÇ)
+// 5. FİLTRELEME FONKSİYONU (GLOBAL)
+// ============================================================
+// HTML'deki onclick="filterProducts(...)" fonksiyonunun çalışması için window'a tanımlıyoruz
+window.filterProducts = function(category) {
+    const cards = document.querySelectorAll('.product-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    // Buton aktiflik durumu (Rengini değiştir)
+    buttons.forEach(btn => btn.classList.remove('active'));
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+
+    // Kartları gizle/göster
+    cards.forEach(card => {
+        const cardCat = card.getAttribute('data-category');
+        // 'all' seçiliyse hepsini göster, değilse sadece eşleşenleri göster
+        if (category === 'all' || cardCat === category) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// ============================================================
+// 6. LIGHTBOX (BÜYÜTEÇ)
 // ============================================================
 function setupLightbox() {
     if(!document.getElementById('imageModal')) {
@@ -264,7 +319,7 @@ function setupLightbox() {
 document.addEventListener('DOMContentLoaded', setupLightbox);
 
 // ============================================================
-// 6. SCROLL ANIMASYONLARI (ScrollReveal) - DÜZELTİLDİ
+// 7. SCROLL ANIMASYONLARI (ScrollReveal)
 // ============================================================
 if (typeof ScrollReveal !== 'undefined') {
     const sr = ScrollReveal({
@@ -275,18 +330,15 @@ if (typeof ScrollReveal !== 'undefined') {
         reset: false
     });
 
-    // Hangi elemanlar nasıl gelsin?
     sr.reveal('.hero-content, .page-banner h2', { origin: 'top', distance: '80px' });
     sr.reveal('.section-title', { origin: 'left', interval: 200 });
     sr.reveal('.product-card', { interval: 150 }); 
     sr.reveal('footer', { distance: '20px', delay: 100 });
-    
-    // YENİ EKLENEN CTA BÖLÜMÜ (Artık süslü parantezin içinde!)
     sr.reveal('.cta-section', { scale: 0.85, duration: 1200 });
 }
 
 // ============================================================
-// 7. HAMBURGER MENÜ (GARANTİLİ VERSİYON)
+// 8. HAMBURGER MENÜ (GARANTİLİ VERSİYON)
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -294,7 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const navMenu = document.querySelector(".nav-links");
 
     if (hamburger) {
-        // Konsola bilgi verelim
         console.log("✅ Hamburger menü hazır.");
         
         hamburger.addEventListener("click", () => {

@@ -19,11 +19,12 @@
     <meta property="og:type" content="website">
 
     <link rel="icon" type="image/png" href="images/logo.jpg">
-    
     <link rel="apple-touch-icon" href="images/logo.jpg">
-    
     <meta name="theme-color" content="#1a1a1a">
 
+    <style>
+        .filter-section { text-align: center; margin-top: 30px; margin-bottom: 20px; }
+    </style>
 </head>
 <body>
 
@@ -57,9 +58,13 @@
         <h2>ÜRÜNLERİMİZ</h2>
     </div>
 </div>
-
-    <main>
-       
+<main>
+        
+        <section class="filter-section container">
+            <button class="filter-btn active" onclick="filterProducts('all')">Tümü</button>
+            <button class="filter-btn" onclick="filterProducts('new')">✨ Sıfır Ürünler</button>
+            <button class="filter-btn" onclick="filterProducts('refurbished')">♻️ Yenilenmiş</button>
+        </section>
 
         <section class="products-section container">
             <div class="products-grid">
@@ -67,8 +72,7 @@
             </div>
         </section>
     </main>
-
-    <footer>
+<footer>
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-info">
