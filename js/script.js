@@ -363,3 +363,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 });
+
+// ============================================================
+// 8. URL'DEN GELEN FİLTREYİ YAKALA (AKILLI LİNK)
+// ============================================================
+if (window.location.pathname.includes("urunler.html")) {
+    document.addEventListener('DOMContentLoaded', () => {
+        // URL'deki # işaretinden sonrasını al (örn: #new)
+        const hash = window.location.hash.replace('#', '');
+        
+        // Eğer bir filtre komutu varsa o butonu tetikle
+        if (hash === 'new') {
+            // Biraz bekleyelim ki ürünler yüklensin
+            setTimeout(() => filterProducts('new'), 500);
+        } else if (hash === 'refurbished') {
+            setTimeout(() => filterProducts('refurbished'), 500);
+        }
+    });
+}
