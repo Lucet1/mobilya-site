@@ -1928,3 +1928,19 @@ footer {
     border-color: #c9a24d;
     box-shadow: 0 4px 10px rgba(201, 162, 77, 0.3);
 }
+
+/* MEVCUT BANNERLARIN ALTINA EKLE */
+
+/* Sıfır Ürünler Sayfası İçin Banner (Resmi değiştirebilirsin) */
+.banner-new { 
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/urun12.jpg') !important; 
+    background-position: center; 
+    background-size: cover; 
+}
+
+/* Yenilenmiş Ürünler Sayfası İçin Banner (Resmi değiştirebilirsin) */
+.banner-refurbished { 
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/urun15.jpg') !important; 
+    background-position: center; 
+    background-size: cover; 
+}

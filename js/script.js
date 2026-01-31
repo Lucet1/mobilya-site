@@ -93,37 +93,29 @@ if (window.location.pathname.includes("admin.html")) {
         });
     }
 
-    // ÜRÜN YÜKLEME (GÜNCELLENDİ: Kategori Eklendi)
+    // ÜRÜN YÜKLEME
     const addForm = document.getElementById('addProductForm');
     if (addForm) {
         addForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const fileInput = document.getElementById('productImage');
-            const categoryInput = document.getElementById('productCategory'); // YENİ: Kategori Seçimi
+            const categoryInput = document.getElementById('productCategory'); 
             
             const file = fileInput.files[0];
-            const category = categoryInput.value; // Seçilen değer (new veya refurbished)
+            const category = categoryInput.value; 
             const statusMsg = document.getElementById('uploadStatus');
 
-            if (!file) {
-                alert("Lütfen bir resim seçin!");
-                return;
-            }
-            // Kategori seçilmediyse uyar
-            if (!category) {
-                alert("Lütfen ürün durumu seçin (Sıfır veya Yenilenmiş)!");
-                return;
-            }
+            if (!file) { alert("Lütfen bir resim seçin!"); return; }
+            if (!category) { alert("Lütfen ürün durumu seçin!"); return; }
 
             statusMsg.textContent = "Yükleniyor... Lütfen bekleyin.";
 
             try {
                 const base64Image = await compressAndConvertToBase64(file);
                 
-                // Veritabanına kaydet (Kategoriyle beraber)
                 await addDoc(collection(db, "products"), {
                     imageUrl: base64Image,
-                    category: category, // YENİ: Veritabanına yazılıyor
+                    category: category, 
                     date: Date.now()
                 });
 
@@ -151,13 +143,12 @@ if (window.location.pathname.includes("admin.html")) {
             grid.innerHTML = ""; 
 
             if (querySnapshot.empty) {
-                grid.innerHTML = "<p style='width:100%; text-align:center;'>Henüz sisteme yüklenmiş fotoğraf yok.</p>";
+                grid.innerHTML = "<p style='width:100%; text-align:center;'>Henüz ürün yok.</p>";
                 return;
             }
 
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
-                // Admin panelinde de hangi kategori olduğunu küçük bir ikonla gösterelim
                 const badgeIcon = data.category === 'refurbished' ? '♻️' : '✨';
 
                 const cardHTML = `
@@ -180,26 +171,40 @@ if (window.location.pathname.includes("admin.html")) {
     // ÜRÜN SİLME
     window.deleteProduct = async function(docId) {
         if(!confirm("⚠️ SİLMEK İSTİYOR MUSUNUZ?")) return;
-
         try {
             await deleteDoc(doc(db, "products", docId));
             loadAdminProducts(); 
         } catch (error) {
             console.error("Silme hatası:", error);
-            alert("Yetkiniz yok veya bir hata oluştu.");
+            alert("Hata oluştu.");
         }
     };
 }
 
 // ============================================================
-// 4. MÜŞTERİ SAYFASI (FİLTRELEME & ROZETLER DAHİL)
+// 4. MÜŞTERİ SAYFASI (AKILLI KATEGORİ SİSTEMİ)
 // ============================================================
-if (window.location.pathname.includes("urunler.html")) {
+// Bu kod; urunler.html, sifir-urunler.html ve yenilenmis-urunler.html sayfalarının hepsinde çalışır.
+if (
+    window.location.pathname.includes("urunler.html") || 
+    window.location.pathname.includes("sifir-urunler.html") || 
+    window.location.pathname.includes("yenilenmis-urunler.html")
+) {
     
     async function loadPublicProducts() {
         const grid = document.querySelector('.products-grid');
         
-        // SKELETON LOADING
+        // --- 1. Hangi Sayfadayız? ---
+        const path = window.location.pathname;
+        let targetCategory = 'all'; // Varsayılan: Hepsi (urunler.html için)
+
+        if (path.includes("sifir-urunler.html")) {
+            targetCategory = 'new';
+        } else if (path.includes("yenilenmis-urunler.html")) {
+            targetCategory = 'refurbished';
+        }
+
+        // --- 2. Skeleton Loading ---
         let skeletonHTML = "";
         for(let i=0; i<8; i++) {
             skeletonHTML += `<div class="skeleton-card"><div class="skeleton-image"></div></div>`;
@@ -217,13 +222,23 @@ if (window.location.pathname.includes("urunler.html")) {
                 return;
             }
 
+            let productsFound = false;
+
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
+                const productCat = data.category || 'new'; // Eski veriler için varsayılan
+
+                // --- 3. FİLTRELEME MANTIĞI ---
+                // Eğer "Sıfır Ürünler" sayfasındaysak ve ürün sıfır değilse -> ATLA
+                if (targetCategory === 'new' && productCat !== 'new') return;
                 
-                // YENİ: Kategori Kontrolü ve Rozet (Badge) Oluşturma
-                // Eğer eski yüklenen ürünlerde kategori yoksa varsayılan olarak 'new' (sıfır) kabul et
-                const productCat = data.category || 'new'; 
-                
+                // Eğer "Yenilenmiş" sayfasındaysak ve ürün yenilenmiş değilse -> ATLA
+                if (targetCategory === 'refurbished' && productCat !== 'refurbished') return;
+
+                // Buraya kadar geldiyse ürün uygundur
+                productsFound = true;
+
+                // Rozet (Badge) Tasarımı
                 let badgeHTML = '';
                 if (productCat === 'refurbished') {
                     badgeHTML = `<span style="position:absolute; top:10px; left:10px; background:#27ae60; color:white; padding:5px 10px; border-radius:4px; font-size:12px; font-weight:bold; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">♻️ Yenilenmiş</span>`;
@@ -231,14 +246,13 @@ if (window.location.pathname.includes("urunler.html")) {
                     badgeHTML = `<span style="position:absolute; top:10px; left:10px; background:#c9a24d; color:white; padding:5px 10px; border-radius:4px; font-size:12px; font-weight:bold; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">✨ Sıfır</span>`;
                 }
 
-                // WhatsApp Hazır Mesaj Linki
                 const whatsappLink = `https://wa.me/905427819966?text=Merhaba,%20web%20sitenizdeki%20bu%20ürün%20için%20fiyat%20bilgisi%20alabilir%20miyim?`;
 
-                // YENİ: data-category özelliği eklendi (Filtreleme için)
                 const html = `
-                    <div class="product-card" data-category="${productCat}">
+                    <div class="product-card">
                         <div class="product-img-wrapper">
-                            ${badgeHTML} <img src="${data.imageUrl}" loading="lazy">
+                            ${badgeHTML}
+                            <img src="${data.imageUrl}" loading="lazy">
                             <div class="overlay">
                                 <a href="${whatsappLink}" target="_blank" class="view-btn">
                                     <span style="font-size:18px; vertical-align:middle;">📞</span> Fiyat Sor
@@ -249,6 +263,11 @@ if (window.location.pathname.includes("urunler.html")) {
                 `;
                 grid.insertAdjacentHTML('beforeend', html);
             });
+
+            // Eğer filtreleme sonucunda hiç ürün kalmadıysa
+            if (!productsFound) {
+                grid.innerHTML = "<p style='width:100%; text-align:center; grid-column:1/-1; padding:20px; color:#666;'>Bu kategoride henüz ürün bulunmamaktadır.</p>";
+            }
             
             setupLightbox();
             
@@ -260,33 +279,7 @@ if (window.location.pathname.includes("urunler.html")) {
 }
 
 // ============================================================
-// 5. FİLTRELEME FONKSİYONU (GLOBAL)
-// ============================================================
-// HTML'deki onclick="filterProducts(...)" fonksiyonunun çalışması için window'a tanımlıyoruz
-window.filterProducts = function(category) {
-    const cards = document.querySelectorAll('.product-card');
-    const buttons = document.querySelectorAll('.filter-btn');
-
-    // Buton aktiflik durumu (Rengini değiştir)
-    buttons.forEach(btn => btn.classList.remove('active'));
-    if (event && event.target) {
-        event.target.classList.add('active');
-    }
-
-    // Kartları gizle/göster
-    cards.forEach(card => {
-        const cardCat = card.getAttribute('data-category');
-        // 'all' seçiliyse hepsini göster, değilse sadece eşleşenleri göster
-        if (category === 'all' || cardCat === category) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-// ============================================================
-// 6. LIGHTBOX (BÜYÜTEÇ)
+// 5. LIGHTBOX (BÜYÜTEÇ)
 // ============================================================
 function setupLightbox() {
     if(!document.getElementById('imageModal')) {
@@ -319,7 +312,7 @@ function setupLightbox() {
 document.addEventListener('DOMContentLoaded', setupLightbox);
 
 // ============================================================
-// 7. SCROLL ANIMASYONLARI (ScrollReveal)
+// 6. SCROLL ANIMASYONLARI
 // ============================================================
 if (typeof ScrollReveal !== 'undefined') {
     const sr = ScrollReveal({
@@ -338,10 +331,9 @@ if (typeof ScrollReveal !== 'undefined') {
 }
 
 // ============================================================
-// 8. HAMBURGER MENÜ (GARANTİLİ VERSİYON)
+// 7. HAMBURGER MENÜ
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-    
     const hamburger = document.querySelector(".hamburger");
     const navMenu = document.querySelector(".nav-links");
 
@@ -353,31 +345,11 @@ document.addEventListener('DOMContentLoaded', () => {
             navMenu.classList.toggle("active");
         });
 
-        // Linklere basınca kapansın
         document.querySelectorAll(".nav-links li a").forEach(link => {
             link.addEventListener("click", () => {
                 hamburger.classList.remove("active");
                 navMenu.classList.remove("active");
             });
         });
-
     }
 });
-
-// ============================================================
-// 8. URL'DEN GELEN FİLTREYİ YAKALA (AKILLI LİNK)
-// ============================================================
-if (window.location.pathname.includes("urunler.html")) {
-    document.addEventListener('DOMContentLoaded', () => {
-        // URL'deki # işaretinden sonrasını al (örn: #new)
-        const hash = window.location.hash.replace('#', '');
-        
-        // Eğer bir filtre komutu varsa o butonu tetikle
-        if (hash === 'new') {
-            // Biraz bekleyelim ki ürünler yüklensin
-            setTimeout(() => filterProducts('new'), 500);
-        } else if (hash === 'refurbished') {
-            setTimeout(() => filterProducts('refurbished'), 500);
-        }
-    });
-}
