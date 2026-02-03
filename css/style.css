@@ -1944,3 +1944,45 @@ footer {
     background-position: center; 
     background-size: cover; 
 }
+
+/* ================= 404 HATA SAYFASI ================= */
+.error-page {
+    height: 60vh; /* Ekranın %60'ını kaplasın */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.error-content {
+    max-width: 600px;
+}
+
+.error-code {
+    font-size: 100px;
+    font-weight: 800;
+    color: #c9a24d; /* Altın rengi */
+    line-height: 1;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+}
+
+.error-content h2 {
+    font-size: 30px;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+}
+
+.error-content p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Mobilde yazı boyutunu küçültelim */
+@media (max-width: 768px) {
+    .error-code { font-size: 80px; }
+    .error-content h2 { font-size: 24px; }
+    .error-actions { display: flex; flex-direction: column; gap: 10px; }
+    .error-actions .cta-btn { margin: 0 !important; }
+}
