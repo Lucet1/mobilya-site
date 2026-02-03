@@ -49,7 +49,8 @@ function compressAndConvertToBase64(file) {
 // ============================================================
 // 3. ADMIN PANELİ İŞLEMLERİ
 // ============================================================
-if (window.location.pathname.includes("admin.html")) {
+// DÜZELTME: .html uzantısı olmasa da çalışsın diye "admin" olarak aratıyoruz
+if (window.location.pathname.includes("admin")) {
 
     // OTURUM DURUMUNU DİNLE
     onAuthStateChanged(auth, (user) => {
@@ -184,10 +185,11 @@ if (window.location.pathname.includes("admin.html")) {
 // ============================================================
 // 4. MÜŞTERİ SAYFASI (AKILLI KATEGORİ SİSTEMİ)
 // ============================================================
+// DÜZELTME: .html uzantılarını kaldırıp genel arama yapıyoruz
 if (
-    window.location.pathname.includes("urunler.html") || 
-    window.location.pathname.includes("sifir-urunler.html") || 
-    window.location.pathname.includes("yenilenmis-urunler.html")
+    window.location.pathname.includes("urunler") || 
+    window.location.pathname.includes("sifir-urunler") || 
+    window.location.pathname.includes("yenilenmis-urunler")
 ) {
     
     async function loadPublicProducts() {
@@ -197,9 +199,9 @@ if (
         const path = window.location.pathname;
         let targetCategory = 'all'; // Varsayılan: Hepsi (urunler.html için)
 
-        if (path.includes("sifir-urunler.html")) {
+        if (path.includes("sifir-urunler")) {
             targetCategory = 'new';
-        } else if (path.includes("yenilenmis-urunler.html")) {
+        } else if (path.includes("yenilenmis-urunler")) {
             targetCategory = 'refurbished';
         }
 
@@ -233,7 +235,7 @@ if (
 
                 productsFound = true;
 
-                // --- 4. ROZET (BADGE) TASARIMI (GÜNCELLENDİ) ---
+                // --- 4. ROZET (BADGE) TASARIMI ---
                 let badgeHTML = '';
                 
                 // SADECE ÖZEL SAYFALARDAYSAK ROZET GÖSTER (targetCategory 'all' DEĞİLSE)
@@ -244,7 +246,7 @@ if (
                         badgeHTML = `<span style="position:absolute; top:10px; left:10px; background:#c9a24d; color:white; padding:5px 10px; border-radius:4px; font-size:12px; font-weight:bold; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">✨ Sıfır</span>`;
                     }
                 }
-                // Eğer targetCategory 'all' ise (yani urunler.html) badgeHTML boş kalır ve etiket görünmez.
+                // Eğer targetCategory 'all' ise (yani urunler.html) badgeHTML boş kalır.
 
                 const whatsappLink = `https://wa.me/905427819966?text=Merhaba,%20web%20sitenizdeki%20bu%20ürün%20için%20fiyat%20bilgisi%20alabilir%20miyim?`;
 

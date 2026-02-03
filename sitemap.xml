@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <url>
       <loc>https://mobilya-site.vercel.app/</loc>
-      <lastmod>2026-01-27</lastmod>
+      <lastmod>2026-02-04</lastmod>
       <priority>1.00</priority>
    </url>
    <url>
@@ -12,6 +12,14 @@
    <url>
       <loc>https://mobilya-site.vercel.app/urunler.html</loc>
       <priority>0.90</priority>
+   </url>
+   <url>
+      <loc>https://mobilya-site.vercel.app/sifir-urunler.html</loc>
+      <priority>0.85</priority>
+   </url>
+   <url>
+      <loc>https://mobilya-site.vercel.app/yenilenmis-urunler.html</loc>
+      <priority>0.85</priority>
    </url>
    <url>
       <loc>https://mobilya-site.vercel.app/hakkimizda.html</loc>

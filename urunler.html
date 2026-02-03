@@ -7,7 +7,8 @@
     <title>Ürünlerimiz | Emre Koltuk Tasarım</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
 
     <meta name="keywords" content="mobilya, koltuk takımı, ankara siteler mobilya, özel tasarım koltuk, yatak odası, yemek odası, mobilya imalat, emre koltuk tasarım">
     <meta name="author" content="Emre Koltuk Tasarım">
@@ -18,60 +19,59 @@
     <meta property="og:url" content="https://mobilya-site.vercel.app">
     <meta property="og:type" content="website">
 
-    <link rel="icon" type="image/png" href="images/logo.jpg">
-    <link rel="apple-touch-icon" href="images/logo.jpg">
+    <link rel="icon" type="image/png" href="/images/logo.jpg">
+    <link rel="apple-touch-icon" href="/images/logo.jpg">
     <meta name="theme-color" content="#1a1a1a">
 
-    <style>
-        .filter-section { text-align: center; margin-top: 30px; margin-bottom: 20px; }
-    </style>
 </head>
 <body>
 
     <header class="main-header">
-    <div class="container">
-        <div class="logo">
-            <a href="index.html">
-                <img src="images/logo.jpg" alt="Emre Koltuk Tasarım">
-            </a>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="/images/logo.jpg" alt="Emre Koltuk Tasarım">
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html">Ana Sayfa</a></li>
+                <li><a href="urunler.html">Ürünler</a></li> 
+                <li><a href="sifir-urunler.html">Sıfır Ürünler</a></li>
+                <li><a href="yenilenmis-urunler.html">Yenilenmiş Ürünler</a></li>
+                <li><a href="hakkimizda.html">Hakkımızda</a></li>
+                <li><a href="iletisim.html">İletişim</a></li>
+                <li><a href="admin.html" class="admin-btn">Yönetici</a></li>
+            </ul>
+
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
+    </header>
 
-        <ul class="nav-links">
-            <li><a href="index.html">Ana Sayfa</a></li>
-            <li><a href="urunler.html">Ürünler</a></li> <li><a href="sifir-urunler.html">Sıfır Ürünler</a></li>
-            <li><a href="yenilenmis-urunler.html">Yenilenmiş Ürünler</a></li>
-            <li><a href="hakkimizda.html">Hakkımızda</a></li>
-            <li><a href="iletisim.html">İletişim</a></li>
-            <li><a href="admin.html" class="admin-btn">Yönetici</a></li>
-        </ul>
-
-        <div class="hamburger">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+    <div class="page-banner banner-urunler">
+        <div class="container">
+            <h2>ÜRÜNLERİMİZ</h2>
         </div>
     </div>
-</header>
 
-<div class="page-banner banner-urunler">
-    <div class="container">
-        <h2>ÜRÜNLERİMİZ</h2>
-    </div>
-</div>
-<main>
-        
+    <main>
         <section class="products-section container">
             <div class="products-grid">
                 <p style="text-align:center; width:100%; grid-column: 1 / -1; color:#666;">Ürünler yükleniyor...</p>
             </div>
         </section>
     </main>
-<footer>
+
+    <footer>
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-info">
                     <a href="index.html">
-                        <img src="images/logo.jpg" alt="Emre Koltuk Tasarım" class="footer-logo-img">
+                        <img src="/images/logo.jpg" alt="Emre Koltuk Tasarım" class="footer-logo-img">
                     </a>
                     
                     <p>
@@ -96,7 +96,7 @@
 
                 <div class="social">
                     <a href="https://www.instagram.com/davutguldali66?igsh=ODQ5MmJ2NzltODdz" target="_blank">
-                        <img src="images/instagram.png" alt="Instagram">
+                        <img src="/images/instagram.png" alt="Instagram">
                     </a>
                 </div>
             </div>
@@ -130,6 +130,6 @@
     </div>
 
     <script src="https://unpkg.com/scrollreveal"></script>
-    <script type="module" src="js/script.js"></script>
+    <script type="module" src="/js/script.js"></script>
 </body>
 </html>
