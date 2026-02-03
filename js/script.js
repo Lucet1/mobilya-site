@@ -184,7 +184,6 @@ if (window.location.pathname.includes("admin.html")) {
 // ============================================================
 // 4. MÜŞTERİ SAYFASI (AKILLI KATEGORİ SİSTEMİ)
 // ============================================================
-// Bu kod; urunler.html, sifir-urunler.html ve yenilenmis-urunler.html sayfalarının hepsinde çalışır.
 if (
     window.location.pathname.includes("urunler.html") || 
     window.location.pathname.includes("sifir-urunler.html") || 
@@ -229,22 +228,23 @@ if (
                 const productCat = data.category || 'new'; // Eski veriler için varsayılan
 
                 // --- 3. FİLTRELEME MANTIĞI ---
-                // Eğer "Sıfır Ürünler" sayfasındaysak ve ürün sıfır değilse -> ATLA
                 if (targetCategory === 'new' && productCat !== 'new') return;
-                
-                // Eğer "Yenilenmiş" sayfasındaysak ve ürün yenilenmiş değilse -> ATLA
                 if (targetCategory === 'refurbished' && productCat !== 'refurbished') return;
 
-                // Buraya kadar geldiyse ürün uygundur
                 productsFound = true;
 
-                // Rozet (Badge) Tasarımı
+                // --- 4. ROZET (BADGE) TASARIMI (GÜNCELLENDİ) ---
                 let badgeHTML = '';
-                if (productCat === 'refurbished') {
-                    badgeHTML = `<span style="position:absolute; top:10px; left:10px; background:#27ae60; color:white; padding:5px 10px; border-radius:4px; font-size:12px; font-weight:bold; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">♻️ Yenilenmiş</span>`;
-                } else {
-                    badgeHTML = `<span style="position:absolute; top:10px; left:10px; background:#c9a24d; color:white; padding:5px 10px; border-radius:4px; font-size:12px; font-weight:bold; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">✨ Sıfır</span>`;
+                
+                // SADECE ÖZEL SAYFALARDAYSAK ROZET GÖSTER (targetCategory 'all' DEĞİLSE)
+                if (targetCategory !== 'all') {
+                    if (productCat === 'refurbished') {
+                        badgeHTML = `<span style="position:absolute; top:10px; left:10px; background:#27ae60; color:white; padding:5px 10px; border-radius:4px; font-size:12px; font-weight:bold; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">♻️ Yenilenmiş</span>`;
+                    } else {
+                        badgeHTML = `<span style="position:absolute; top:10px; left:10px; background:#c9a24d; color:white; padding:5px 10px; border-radius:4px; font-size:12px; font-weight:bold; z-index:10; box-shadow:0 2px 5px rgba(0,0,0,0.2);">✨ Sıfır</span>`;
+                    }
                 }
+                // Eğer targetCategory 'all' ise (yani urunler.html) badgeHTML boş kalır ve etiket görünmez.
 
                 const whatsappLink = `https://wa.me/905427819966?text=Merhaba,%20web%20sitenizdeki%20bu%20ürün%20için%20fiyat%20bilgisi%20alabilir%20miyim?`;
 
@@ -264,7 +264,6 @@ if (
                 grid.insertAdjacentHTML('beforeend', html);
             });
 
-            // Eğer filtreleme sonucunda hiç ürün kalmadıysa
             if (!productsFound) {
                 grid.innerHTML = "<p style='width:100%; text-align:center; grid-column:1/-1; padding:20px; color:#666;'>Bu kategoride henüz ürün bulunmamaktadır.</p>";
             }
