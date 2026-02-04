@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 
-Sitemap: https://mobilya-site.vercel.app/sitemap.xml
+Sitemap: https://emrekoltuktasarim.com.tr/sitemap.xml

@@ -1,36 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <url>
-      <loc>https://mobilya-site.vercel.app/</loc>
-      <lastmod>2026-02-04</lastmod>
+      <loc>https://emrekoltuktasarim.com.tr/</loc>
+      <lastmod>2024-02-04</lastmod>
       <priority>1.00</priority>
    </url>
    <url>
-      <loc>https://mobilya-site.vercel.app/index.html</loc>
+      <loc>https://emrekoltuktasarim.com.tr/index.html</loc>
+      <lastmod>2024-02-04</lastmod>
       <priority>0.80</priority>
    </url>
    <url>
-      <loc>https://mobilya-site.vercel.app/urunler.html</loc>
+      <loc>https://emrekoltuktasarim.com.tr/urunler.html</loc>
+      <lastmod>2024-02-04</lastmod>
       <priority>0.90</priority>
    </url>
    <url>
-      <loc>https://mobilya-site.vercel.app/sifir-urunler.html</loc>
+      <loc>https://emrekoltuktasarim.com.tr/sifir-urunler.html</loc>
+      <lastmod>2024-02-04</lastmod>
       <priority>0.85</priority>
    </url>
    <url>
-      <loc>https://mobilya-site.vercel.app/yenilenmis-urunler.html</loc>
+      <loc>https://emrekoltuktasarim.com.tr/yenilenmis-urunler.html</loc>
+      <lastmod>2024-02-04</lastmod>
       <priority>0.85</priority>
    </url>
    <url>
-      <loc>https://mobilya-site.vercel.app/hakkimizda.html</loc>
-      <priority>0.80</priority>
+      <loc>https://emrekoltuktasarim.com.tr/hakkimizda.html</loc>
+      <lastmod>2024-02-04</lastmod>
+      <priority>0.70</priority>
    </url>
    <url>
-      <loc>https://mobilya-site.vercel.app/vizyon-misyon.html</loc>
-      <priority>0.80</priority>
+      <loc>https://emrekoltuktasarim.com.tr/vizyon-misyon.html</loc>
+      <lastmod>2024-02-04</lastmod>
+      <priority>0.60</priority>
    </url>
    <url>
-      <loc>https://mobilya-site.vercel.app/iletisim.html</loc>
+      <loc>https://emrekoltuktasarim.com.tr/iletisim.html</loc>
+      <lastmod>2024-02-04</lastmod>
       <priority>0.80</priority>
    </url>
 </urlset>
